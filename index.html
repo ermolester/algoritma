@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Algoritma Simülatörü</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        .box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            width: 350px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        button {
+            margin: 5px;
+            padding: 10px;
+            width: 100%;
+            cursor: pointer;
+        }
+        input {
+            padding: 8px;
+            width: 90%;
+            margin: 5px;
+        }
+        #output {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Algoritma Simülatörü</h2>
+
+    <button onclick="bubbleSort()">Bubble Sort</button>
+    <button onclick="selectionSort()">Selection Sort</button>
+    <button onclick="factorial()">Faktöriyel</button>
+    <button onclick="fibonacci()">Fibonacci</button>
+    <button onclick="prime()">Asal Kontrol</button>
+
+    <input id="input" placeholder="Sayıları veya tek sayı gir">
+
+    <div id="output"></div>
+</div>
+
+<script>
+function getArray(){
+    return document.getElementById("input").value.split(" ").map(Number);
+}
+
+function show(text){
+    document.getElementById("output").innerText = text;
+}
+
+// Bubble Sort
+function bubbleSort(){
+    let arr = getArray();
+    for(let i=0;i<arr.length;i++){
+        for(let j=0;j<arr.length-i-1;j++){
+            if(arr[j] > arr[j+1]){
+                [arr[j], arr[j+1]] = [arr[j+1], arr[j]];
+            }
+        }
+    }
+    show("Sonuç: " + arr.join(", "));
+}
+
+// Selection Sort
+function selectionSort(){
+    let arr = getArray();
+    for(let i=0;i<arr.length;i++){
+        let min=i;
+        for(let j=i+1;j<arr.length;j++){
+            if(arr[j] < arr[min]) min=j;
+        }
+        [arr[i], arr[min]] = [arr[min], arr[i]];
+    }
+    show("Sonuç: " + arr.join(", "));
+}
+
+// Factorial
+function factorial(){
+    let n = Number(document.getElementById("input").value);
+    let res = 1;
+    for(let i=2;i<=n;i++) res *= i;
+    show("Sonuç: " + res);
+}
+
+// Fibonacci
+function fibonacci(){
+    let n = Number(document.getElementById("input").value);
+    let fib=[0,1];
+    for(let i=2;i<n;i++){
+        fib.push(fib[i-1]+fib[i-2]);
+    }
+    show("Fibonacci: " + fib.slice(0,n).join(", "));
+}
+
+// Prime check
+function prime(){
+    let n = Number(document.getElementById("input").value);
+    let isPrime = n>1;
+    for(let i=2;i*i<=n;i++){
+        if(n%i===0){
+            isPrime=false;
+            break;
+        }
+    }
+    show(isPrime ? "Asal" : "Asal değil");
+}
+</script>
+
+</body>
+</html>
