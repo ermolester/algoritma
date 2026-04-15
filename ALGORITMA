@@ -1,0 +1,30 @@
+import requests
+from bs4 import BeautifulSoup
+
+def kur_algoritma(metin):
+    # Akış şeması girilebilir
+    if "Akış Şeması" in metin:
+        akış_şeması = {
+            "Fonksiyon Adı": [],
+            "Açıklama": [],
+            "Beklenen Sonuçlar": []
+        }
+    else:
+        akış_şeması = {}
+    for line in metin.split('\n'):
+        if line == 'Akış Şeması Giriniz:' and not akış_şeması["Fonksiyon Adı"]:
+            akış_şeması["Fonksiyon Adı"] = requests.get('https://api.akisseedasimantikyapisiolusturmakicinkullanilanwebsitesi'.format(timeout=3).text
+        else:
+            akış_şeması[line] = requests.get('https://api.akisseedasimantikyapisiolusturmakicinkullanilanwebsitesi'.format(timeout=3), headers={'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Bearer <API anahtarı>')
+
+    # Doğal dil veya pseudocode giriş alanı
+    inputs = {
+        "Doğal Dil Girişi": input("Algoritma ile ilgili örnek yazın (kısa veya uzun olabilir):", maxlength=500)
+    }
+
+    while True:
+        try:
+            result = kur_algoritma(input("Algoritma için doğal dil giriniz (örnek):"))
+            print(f"Algoritmanız başarıyla kaydedildi! Sonuç: {result}")
+        except Exception as e:
+            console.error("Bir hata oluştu!")
