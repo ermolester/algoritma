@@ -2,131 +2,104 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Akış Şeması Simülatörü</title>
+<title>Akış Şeması Çizici</title>
 
 <style>
 body {
     font-family: Arial;
-    background:#f2f2f2;
-    text-align:center;
+    text-align: center;
+    background: #f4f4f4;
+}
+
+canvas {
+    background: white;
+    border: 1px solid #ccc;
+    margin-top: 10px;
 }
 
 .container {
-    width: 500px;
     margin: auto;
-    background:white;
-    padding:20px;
-    border-radius:10px;
-    box-shadow:0 0 10px rgba(0,0,0,0.2);
-}
-
-input, select {
-    padding:8px;
-    margin:5px;
-    width: 90%;
+    width: 900px;
 }
 
 button {
-    padding:10px;
-    margin:5px;
-    width: 95%;
-    cursor:pointer;
-}
-
-.step {
-    background:#e0e0e0;
-    margin:5px;
-    padding:8px;
-    border-radius:5px;
-}
-
-#output {
-    margin-top:10px;
-    font-weight:bold;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-
 <h2>Akış Şeması Simülatörü</h2>
 
-<select id="type">
-    <option value="input">Input (Sayı al)</option>
-    <option value="output">Output (Göster)</option>
-    <option value="add">Toplama</option>
-    <option value="multiply">Çarpma</option>
-    <option value="factorial">Faktöriyel</option>
-</select>
+<div class="container">
 
-<input id="value" placeholder="Değer (örn: 5 veya x)">
-
-<button onclick="addStep()">Adım Ekle</button>
-
-<div id="steps"></div>
+<button onclick="addNode('start')">Başla</button>
+<button onclick="addNode('input')">Input</button>
+<button onclick="addNode('process')">İşlem (+1)</button>
+<button onclick="addNode('output')">Output</button>
+<button onclick="addNode('end')">Bitiş</button>
 
 <button onclick="run()">▶ Çalıştır</button>
 
-<div id="output"></div>
+<canvas id="c" width="900" height="500"></canvas>
 
 </div>
 
 <script>
 
-let steps = [];
-let memory = {};
+let canvas = document.getElementById("c");
+let ctx = canvas.getContext("2d");
 
-function addStep(){
-    let type = document.getElementById("type").value;
-    let value = document.getElementById("value").value;
+let nodes = [];
+let x = 50;
 
-    steps.push({type, value});
-    render();
+function draw(){
+    ctx.clearRect(0,0,900,500);
+
+    nodes.forEach((n,i)=>{
+        ctx.fillStyle = "#ddd";
+        ctx.fillRect(n.x, 100, 120, 50);
+
+        ctx.fillStyle = "#000";
+        ctx.fillText(n.type, n.x+30, 130);
+
+        if(i > 0){
+            ctx.beginPath();
+            ctx.moveTo(nodes[i-1].x+120, 125);
+            ctx.lineTo(n.x, 125);
+            ctx.stroke();
+        }
+    });
 }
 
-function render(){
-    let html = "";
-    steps.forEach((s,i)=>{
-        html += `<div class="step">${i+1}. ${s.type} → ${s.value}</div>`;
-    });
-    document.getElementById("steps").innerHTML = html;
+function addNode(type){
+    nodes.push({type, x});
+    x += 150;
+    draw();
 }
 
 function run(){
-    memory = {};
-    let out = "";
+    let value = 0;
 
-    steps.forEach(step=>{
-        if(step.type === "input"){
-            memory["x"] = Number(prompt("Sayı gir:"));
+    nodes.forEach(n=>{
+        if(n.type === "input"){
+            value = Number(prompt("Sayı gir:"));
         }
 
-        else if(step.type === "output"){
-            let val = step.value;
-            if(val === "x") val = memory["x"];
-            out += val + " ";
+        else if(n.type === "process"){
+            value = value + 1;
         }
 
-        else if(step.type === "add"){
-            memory["x"] = (memory["x"] || 0) + Number(step.value);
-        }
-
-        else if(step.type === "multiply"){
-            memory["x"] = (memory["x"] || 1) * Number(step.value);
-        }
-
-        else if(step.type === "factorial"){
-            let n = memory["x"] || Number(step.value);
-            let f = 1;
-            for(let i=1;i<=n;i++) f *= i;
-            memory["x"] = f;
+        else if(n.type === "output"){
+            alert("Çıkış: " + value);
         }
     });
-
-    document.getElementById("output").innerText = "Sonuç: " + out + (memory["x"] ? " | x=" + memory["x"] : "");
 }
+
+draw();
 
 </script>
 
